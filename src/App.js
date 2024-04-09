@@ -3,7 +3,11 @@ import React from "react";
 import MemoryGame from "./components/MemoryGame";
 
 function App() {
-  return <MemoryGame />;
+  return (
+    <div className="main">
+      <MemoryGame />
+    </div>
+  );
 }
 
 export default App;

@@ -18,14 +18,11 @@
   align-items: center;
   cursor: pointer;
   background-color: grey;
-}
-
-.tile.revealed {
-  background-color: lightgreen;
+  transition: background-color 0.3s;
 }
 
 .tile:hover {
-    background-color: lightgreen;
+    background-color: darkslategray;
 }
 
 .start-btn {
@@ -36,4 +33,13 @@
     justify-content: center;
     width: 100px;
     height: 50px;
+}
+
+.welcome-banner {
+  display: flex;
+  justify-content: center;
+  font-size: 4rem;
+  color: white;
+  padding-top: 20rem;
+  margin-top: -10px;
 }

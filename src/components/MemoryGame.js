@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./MemoryGame.css";
 
 const MemoryGame = () => {
@@ -6,19 +6,48 @@ const MemoryGame = () => {
   const [grid, setGrid] = useState([]);
   const [selectedTiles, setSelectedTiles] = useState([]);
   const [canSelect, setCanSelect] = useState(false);
+  const [isGameDisplaying, setIsGameDisplaying] = useState(false);
+  const totalPairs = (gridSize * gridSize) / 3;
+  const colors = [
+    "#FF4136",
+    "#0074D9",
+    "#85144b",
+    "#FFDC00",
+    "#7FDBFF",
+    "#F012BE",
+    "#01FF70",
+    "#2ECC40",
+    "#AAAAAA",
+    "#3D9970",
+  ];
+  const shuffledColors = colors
+    .sort(() => Math.random() - 0.5)
+    .slice(0, totalPairs);
 
   const initializeGame = () => {
-    const pairs = Array.from(
-      { length: (gridSize * gridSize) / 2 },
-      (_, i) => i + 1
-    );
-    const doubledPairs = [...pairs, ...pairs];
-    const shuffledPairs = doubledPairs.sort(() => Math.random() - 0.5);
-    const gridItems = shuffledPairs.map((number) => ({
+    setIsGameDisplaying(true);
+
+    const numbersArray = Array.from({ length: totalPairs }, (_, i) => i + 1);
+    const pairedNumbersColors = numbersArray.map((number, index) => ({
       number,
+      color: shuffledColors[index % shuffledColors.length],
+    }));
+
+    const doubledPairedNumbersColors = [
+      ...pairedNumbersColors,
+      ...pairedNumbersColors,
+    ];
+    const shuffledPairedNumbersColors = doubledPairedNumbersColors.sort(
+      () => Math.random() - 0.5
+    );
+
+    const gridItems = shuffledPairedNumbersColors.map((pair) => ({
+      number: pair.number,
+      color: pair.color,
       revealed: false,
       permanentRevealed: false,
     }));
+
     setGrid(gridItems);
     setSelectedTiles([]);
     setCanSelect(false);
@@ -29,12 +58,8 @@ const MemoryGame = () => {
         setGrid(gridItems.map((item) => ({ ...item, revealed: false })));
         setCanSelect(true);
       }, 5000); // Hide tiles after 5 seconds
-    }, 1000); // Reveal tiles for 1 second before hiding
+    }); // Reveal tiles for 1 second before hiding
   };
-
-  useEffect(() => {
-    initializeGame();
-  }, []);
 
   const handleTileClick = (index) => {
     const checkWinCondition = () => {
@@ -82,19 +107,26 @@ const MemoryGame = () => {
 
   return (
     <>
-      <div className="memory-grid">
-        {grid.map((tile, index) => (
-          <div
-            key={index}
-            className={`tile ${tile.revealed ? "revealed" : ""}`}
-            onClick={() => handleTileClick(index)}
-          >
-            {tile.revealed ? tile.number : ""}
-          </div>
-        ))}
-      </div>
+      {isGameDisplaying ? (
+        <div className="memory-grid">
+          {grid.map((tile, index) => (
+            <div
+              key={index}
+              className={`tile ${tile.revealed ? "revealed" : ""}`}
+              style={{
+                backgroundColor: tile.revealed ? tile.color : "",
+              }}
+              onClick={() => handleTileClick(index)}
+            >
+              {tile.revealed ? tile.number : ""}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="welcome-banner">Welcome to my game!</p>
+      )}
       <button className="start-btn" onClick={initializeGame}>
-        Start/Reset
+        Start
       </button>
     </>
   );
