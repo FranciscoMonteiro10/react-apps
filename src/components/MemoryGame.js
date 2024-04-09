@@ -58,7 +58,7 @@ const MemoryGame = () => {
         setGrid(gridItems.map((item) => ({ ...item, revealed: false })));
         setCanSelect(true);
       }, 5000); // Hide tiles after 5 seconds
-    }); // Reveal tiles for 1 second before hiding
+    });
   };
 
   const handleTileClick = (index) => {
@@ -68,7 +68,7 @@ const MemoryGame = () => {
         setTimeout(() => {
           alert("You win!");
           initializeGame();
-        }, 1000);
+        }, 500);
       }
     };
     if (!canSelect || grid[index].permanentRevealed) return;
